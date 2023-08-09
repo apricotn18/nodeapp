@@ -1,15 +1,20 @@
 var express = require('express');
 var router = express.Router();
+var { Configuration, OpenAIApi } = require("openai");
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  var items = [
-    { "text": "1st Post." },
-    { "text": "2nd Post." }
-  ];
+var configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+var openai = new OpenAIApi(configuration);
+
+router.get('/', async(req, res, next) => {
+  var completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [{role: "user", content: "おすすめの朝ごはん"}],
+  });
+
   res.render('index', {
-    title: 'node app',
-    items
+    title: completion.data.choices[0].message.content,
   });
 });
 
