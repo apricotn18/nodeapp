@@ -1,20 +1,15 @@
 extends layout
 
 block content
-  -
-    var typeOfMeal = {
-      breakfast: '朝ごはん',
-      lunch: '昼ごはん',
-      dinner: '夜ごはん'
-    };
-
   h1 おすすめの!{typeOfMeal[type]}
   form#meal(name="meal" action="/" method="POST")
     select(name="type" onChange="change()")
       each val, key in typeOfMeal
         option(value=key selected=(key === type)) !{val}
+  p#text= text
 
   script
     | const change = function () {
+    |  document.getElementById('text').innerText = 'loading...';
     |  document.forms["meal"].submit();
     | };

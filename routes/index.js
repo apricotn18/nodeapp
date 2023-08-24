@@ -3,6 +3,13 @@ var bodyParser = require('body-parser');
 var router = express.Router();
 var { Configuration, OpenAIApi } = require("openai");
 
+var typeOfMeal = {
+  breakfast: '朝ごはん',
+  lunch: '昼ごはん',
+  dinner: '夜ごはん'
+};
+var defaultType = 'breakfast';
+
 // bodyParser
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,21 +24,28 @@ var openai = new OpenAIApi(configuration);
 console.log('http://localhost:3000/');
 
 router.post('/', async(req, res, next) => {
-  // var completion = await openai.createChatCompletion({
-  //   model: "gpt-3.5-turbo",
-  //   messages: [{role: "user", content: "おすすめの朝ごはん"}],
-  // });
-
+  var type = req.body.type || defaultType;
+  var completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [{role: "user", content: "おすすめの" + typeOfMeal[type]}],
+  });
   res.render('index', {
-    type: req.body.type || 'breakfast',
-    // title: completion.data.choices[0].message.content,
+    typeOfMeal,
+    type,
+    text: completion.data.choices[0].message.content,
   });
 });
 
 router.get('/', async(req, res, next) => {
+  var type = defaultType;
+  var completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [{role: "user", content: "おすすめの" + typeOfMeal[type]}],
+  });
   res.render('index', {
-    type: 'breakfast',
-    // title: completion.data.choices[0].message.content,
+    typeOfMeal,
+    type,
+    text: completion.data.choices[0].message.content,
   });
 });
 
