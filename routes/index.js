@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var dotenv = require('dotenv');
 var router = express.Router();
 var { Configuration, OpenAIApi } = require("openai");
 
@@ -9,6 +10,9 @@ var typeOfMeal = {
   dinner: '夜ごはん'
 };
 var defaultType = 'breakfast';
+
+// dotenv
+dotenv.config();
 
 // bodyParser
 var app = express();
